@@ -8,15 +8,14 @@ filesets:
   files_rtl:
     depend:
       - lowrisc:ibex:demo_system_core
-
   files_xilinx:
     depend:
       - lowrisc:ibex:rv_timer
       - lowrisc:ibex:fpga_xilinx_shared
     files:
       - rtl/fpga/top_artya7.sv
+      - rtl/fpga/top_z7_10.sv
     file_type: systemVerilogSource
-
   files_xilinx_cw305:
     depend:
       - lowrisc:ibex:rv_timer
@@ -24,7 +23,6 @@ filesets:
     files:
       - rtl/fpga/top_cw305.sv
     file_type: systemVerilogSource
-
   files_xilinx_cw312a35:
     depend:
       - lowrisc:ibex:rv_timer
@@ -32,7 +30,6 @@ filesets:
     files:
       - rtl/fpga/top_cw312a35.sv
     file_type: systemVerilogSource
-
   files_sonata:
     depend:
       - lowrisc:ibex:rv_timer
@@ -42,7 +39,6 @@ filesets:
       - rtl/fpga/clkgen_sonata.sv
       - rtl/fpga/rst_ctrl.sv
     file_type: systemVerilogSource
-
   files_verilator:
     depend:
       - lowrisc:ibex:sim_shared
@@ -57,22 +53,22 @@ filesets:
       - dv/verilator/ibex_demo_system.h:  { file_type: cppSource, is_include_file: true}
       - dv/verilator/ibex_demo_system_main.cc: { file_type: cppSource }
       - dv/verilator/demo_system_verilator_lint.vlt:  { file_type: vlt }
-
   files_constraints:
     files:
       - data/pins_artya7.xdc
     file_type: xdc
-
+  files_constraints_z7_10:
+    files:
+      - data/pins_z7_10.xdc
+    file_type: xdc
   files_constraints_cw305:
     files:
       - data/pins_cw305.xdc
     file_type: xdc
-
   files_constraints_cw312a35:
     files:
       - data/pins_cw312a35.xdc
     file_type: xdc
-
   files_constraints_sonata:
     files:
       - data/pins_sonata.xdc
@@ -111,6 +107,21 @@ targets:
     tools:
       vivado:
         part: "xc7a35tcsg324-1"  # Default to Arty A7-35
+    parameters:
+      - SRAMInitFile
+      - PRIM_DEFAULT_IMPL=prim_pkg::ImplXilinx
+    flags:
+      use_bscane_tap: true
+  synth_zybo_z7_10:
+    <<: *default_target
+    default_tool: vivado
+    filesets_append:
+      - files_xilinx
+      - files_constraints_z7_10
+    toplevel: top_zyboz7_10
+    tools:
+      vivado:
+        part: "xc7z010clg400-1"  # zyboZ7-10 part number
     parameters:
       - SRAMInitFile
       - PRIM_DEFAULT_IMPL=prim_pkg::ImplXilinx
